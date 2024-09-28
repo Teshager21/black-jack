@@ -1,5 +1,5 @@
-
-def create_card(size,type,open):
+import random
+def display_card(size,type,open):
     if open==False:
        size=type='#' 
     return f'''
@@ -8,11 +8,19 @@ def create_card(size,type,open):
           | {type} |
           |__{size}|
           '''
-def blackJack():
+def generateCard():
     HEARTS   = chr(9829) # Character 9829 is '♥'.
     DIAMONDS = chr(9830) # Character 9830 is '♦'.
     SPADES   = chr(9824) # Character 9824 is '♠'.
     CLUBS    = chr(9827) # Character 9827 is '♣'.
+    CARDS=['A',2,3,4,5,6,7,8,9,'J,','K','L']
+    TYPE=[ HEARTS,DIAMONDS,SPADES,CLUBS,]
+    return [CARDS[ random.randint(0,11)],TYPE[random.randint(0,3)]]
+def blackJack():
+    # HEARTS   = chr(9829) # Character 9829 is '♥'.
+    # DIAMONDS = chr(9830) # Character 9830 is '♦'.
+    # SPADES   = chr(9824) # Character 9824 is '♠'.
+    # CLUBS    = chr(9827) # Character 9827 is '♣'.
     Money=5000
     print('''
       Rules:
@@ -28,7 +36,9 @@ def blackJack():
         The dealer stops hitting at 17.  ''')
     print("You have $5000")
     bet=input(f'How much would you like to bet? 1-{Money}: \n')
-    print(create_card('K',SPADES,True))
-    print(create_card(1,HEARTS,False))
     
+    # print(display_card('K',SPADES,True))
+    # print(display_card(1,HEARTS,False))
+    # print(generateCard())
+    print(display_card(*generateCard(),True))
 blackJack()
