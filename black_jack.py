@@ -83,6 +83,10 @@ def blackJack():
                 d=generateCard()
                 d.append(True)
                 dealer.append(d)
+            else: 
+                if cardSum(player)>cardSum(dealer):
+                    bet+=bet
+                    print('You won this round!')
                 
             print('dealer: ',cardSum(dealer))
             display_card(dealer)
