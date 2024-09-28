@@ -29,12 +29,12 @@ def cardSum(player):
         else: values.append(10)
 
     return sum(values)
-def check_game_status(player):
+def check_game_status(player,name):
     if cardSum(player)==21 : 
-        print("You won!")
+        print(f"{name} won!")
         return 'gameover'
     elif cardSum(player)>21:
-        print("You Lost")
+        print(f"{name} Lost")
         return 'gameover'
     else: return 'gameon'
 
@@ -79,11 +79,19 @@ def blackJack():
             p.append(True)
             player.append(p)
             dealer[0][2]=True
-            # print('dealer: ',dealer[0])
-            print("Player: ", cardSum(player))
+            if cardSum(dealer)<17: 
+                d=generateCard()
+                d.append(True)
+                dealer.append(d)
+                
+            print('dealer: ',cardSum(dealer))
             display_card(dealer)
+            print("Player: ", cardSum(player))
             display_card(player)
-            if check_game_status(player)=='gameover':
+            if check_game_status(dealer,'Dealer')=='gameover':
+                    # print('Dealer Lost!')
+                    break
+            if check_game_status(player,'You')=='gameover':
                 break
             else: continue
         elif move=='d':
