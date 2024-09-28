@@ -29,6 +29,15 @@ def cardSum(player):
         else: values.append(10)
 
     return sum(values)
+def check_game_status(player):
+    if cardSum(player)==21 : 
+        print("You won!")
+        return 'gameover'
+    elif cardSum(player)>21:
+        print("You Lost")
+        return 'gameover'
+    else: return 'gameon'
+
 
 def blackJack():
     Money=5000
@@ -57,7 +66,7 @@ def blackJack():
     p2.append(True)
     dealer.extend([d1,d2])
     player.extend([p1,p2])
-    bet=input(f'How much would you like to bet? 1-{Money}: \n')
+    bet=int(input(f'How much would you like to bet? 1-{Money}: \n'))
     # print('dealer',dealer)
     print("Dealer: ???")
     display_card(dealer)
@@ -71,6 +80,9 @@ def blackJack():
             player.append(p)
             print("Player: ", cardSum(player))
             display_card(player)
+            if check_game_status(player)=='gameover':
+                break
+            else: continue
         elif move=='d':
             bet+=bet
             print("your current bet is: ", bet)
