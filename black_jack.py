@@ -64,5 +64,16 @@ def blackJack():
     print("Player: ", cardSum(player))
     display_card(player)
     while True:
-        move=input('(H)it, (S)tand, (D)ouble down\n')
+        move=input('(H)it, (S)tand, (D)ouble down\n').lower()
+        if move=='h':
+            p=generateCard()
+            p.append(True)
+            player.append(p)
+            print("Player: ", cardSum(player))
+            display_card(player)
+        elif move=='d':
+            bet+=bet
+            print("your current bet is: ", bet)
+        elif move=='s': continue
+        else: print('Please choose the right letter!')
 blackJack()
