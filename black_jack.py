@@ -1,5 +1,7 @@
 
-def create_card(size,type):
+def create_card(size,type,open):
+    if open==False:
+       size=type='#' 
     return f'''
            ___
           |{size}  |
@@ -11,6 +13,7 @@ def blackJack():
     DIAMONDS = chr(9830) # Character 9830 is '♦'.
     SPADES   = chr(9824) # Character 9824 is '♠'.
     CLUBS    = chr(9827) # Character 9827 is '♣'.
+    Money=5000
     print('''
       Rules:
         Try to get as close to 21 without going over.
@@ -22,9 +25,10 @@ def blackJack():
         On your first play, you can (D)ouble down to increase your bet
         but must hit exactly one more time before standing.
         In case of a tie, the bet is returned to the player.
-        The dealer stops hitting at 17.    
-          ''')
-    print(create_card('K',SPADES))
-    print(create_card(1,HEARTS))
+        The dealer stops hitting at 17.  ''')
+    print("You have $5000")
+    bet=input(f'How much would you like to bet? 1-{Money}: \n')
+    print(create_card('K',SPADES,True))
+    print(create_card(1,HEARTS,False))
     
 blackJack()
