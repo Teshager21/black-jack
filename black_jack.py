@@ -16,7 +16,7 @@ def generateCard():
     DIAMONDS = chr(9830) # Character 9830 is '♦'.
     SPADES   = chr(9824) # Character 9824 is '♠'.
     CLUBS    = chr(9827) # Character 9827 is '♣'.
-    CARDS=['A',2,3,4,5,6,7,8,9,'J,','Q','K']
+    CARDS=['A',2,3,4,5,6,7,8,9,'J','Q','K']
     TYPE=[ HEARTS,DIAMONDS,SPADES,CLUBS,]
     return [CARDS[ random.randint(0,11)],TYPE[random.randint(0,3)]]
 def cardSum(player):
@@ -78,7 +78,10 @@ def blackJack():
             p=generateCard()
             p.append(True)
             player.append(p)
+            dealer[0][2]=True
+            # print('dealer: ',dealer[0])
             print("Player: ", cardSum(player))
+            display_card(dealer)
             display_card(player)
             if check_game_status(player)=='gameover':
                 break
