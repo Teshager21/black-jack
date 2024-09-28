@@ -1,7 +1,7 @@
 import random
 def display_card(player):
     card=row1=row2=row3=row4=''
-    print('here',player)
+    # print('here',player)
     for p in player:
         size,type,open=p
         if open==False:
@@ -9,10 +9,8 @@ def display_card(player):
         row1+=f' ___'
         row2+=f'\n|{size}  |'.strip()
         row3+=f'\n| {type} |'.strip()
-        row4+=f'\n|__{size}|  '.strip()
-        # card+=f' ___' +f'\n|{size}  |'+f'\n| {type} |'+f'\n|__{size}|'
-            
-    return row1+'\n'+row2+'\n'+row3+'\n'+row4
+        row4+=f'\n|__{size}|  '.strip()      
+    print(row1+'\n'+row2+'\n'+row3+'\n'+row4)
 def generateCard():
     HEARTS   = chr(9829) # Character 9829 is '♥'.
     DIAMONDS = chr(9830) # Character 9830 is '♦'.
@@ -21,6 +19,16 @@ def generateCard():
     CARDS=['A',2,3,4,5,6,7,8,9,'J,','Q','K']
     TYPE=[ HEARTS,DIAMONDS,SPADES,CLUBS,]
     return [CARDS[ random.randint(0,11)],TYPE[random.randint(0,3)]]
+def cardSum(player):
+    values=[]
+    for i in player:
+        if type(i[0])!=str and 2<=i[0]<10:
+            values.append(i[0])
+        elif i[0].lower()=='a': 
+            values.append(1)
+        else: values.append(10)
+
+    return sum(values)
 
 def blackJack():
     Money=5000
@@ -50,7 +58,11 @@ def blackJack():
     dealer.extend([d1,d2])
     player.extend([p1,p2])
     bet=input(f'How much would you like to bet? 1-{Money}: \n')
-    print('dealer',dealer)
-    print(display_card(dealer))
-    print(display_card(player))
+    # print('dealer',dealer)
+    print("Dealer: ???")
+    display_card(dealer)
+    print("Player: ", cardSum(player))
+    display_card(player)
+    while True:
+        move=input('(H)it, (S)tand, (D)ouble down\n')
 blackJack()
