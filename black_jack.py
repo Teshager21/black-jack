@@ -1,26 +1,28 @@
 import random
-def display_card(size,type,open):
-    if open==False:
-       size=type='#' 
-    return f'''
-           ___
-          |{size}  |
-          | {type} |
-          |__{size}|
-          '''
+def display_card(player):
+    card=row1=row2=row3=row4=''
+    print('here',player)
+    for p in player:
+        size,type,open=p
+        if open==False:
+            size=type='#' 
+        row1+=f' ___'
+        row2+=f'\n|{size}  |'.strip()
+        row3+=f'\n| {type} |'.strip()
+        row4+=f'\n|__{size}|  '.strip()
+        # card+=f' ___' +f'\n|{size}  |'+f'\n| {type} |'+f'\n|__{size}|'
+            
+    return row1+'\n'+row2+'\n'+row3+'\n'+row4
 def generateCard():
     HEARTS   = chr(9829) # Character 9829 is '♥'.
     DIAMONDS = chr(9830) # Character 9830 is '♦'.
     SPADES   = chr(9824) # Character 9824 is '♠'.
     CLUBS    = chr(9827) # Character 9827 is '♣'.
-    CARDS=['A',2,3,4,5,6,7,8,9,'J,','K','L']
+    CARDS=['A',2,3,4,5,6,7,8,9,'J,','Q','K']
     TYPE=[ HEARTS,DIAMONDS,SPADES,CLUBS,]
     return [CARDS[ random.randint(0,11)],TYPE[random.randint(0,3)]]
+
 def blackJack():
-    # HEARTS   = chr(9829) # Character 9829 is '♥'.
-    # DIAMONDS = chr(9830) # Character 9830 is '♦'.
-    # SPADES   = chr(9824) # Character 9824 is '♠'.
-    # CLUBS    = chr(9827) # Character 9827 is '♣'.
     Money=5000
     print('''
       Rules:
@@ -35,10 +37,20 @@ def blackJack():
         In case of a tie, the bet is returned to the player.
         The dealer stops hitting at 17.  ''')
     print("You have $5000")
+    dealer=[]
+    player=[]
+    d1=generateCard()
+    d1.append(False)
+    d2=generateCard()
+    d2.append(True)
+    p1= generateCard()
+    p1.append(True)
+    p2=generateCard()
+    p2.append(True)
+    dealer.extend([d1,d2])
+    player.extend([p1,p2])
     bet=input(f'How much would you like to bet? 1-{Money}: \n')
-    
-    # print(display_card('K',SPADES,True))
-    # print(display_card(1,HEARTS,False))
-    # print(generateCard())
-    print(display_card(*generateCard(),True))
+    print('dealer',dealer)
+    print(display_card(dealer))
+    print(display_card(player))
 blackJack()
