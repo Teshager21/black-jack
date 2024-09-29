@@ -11,14 +11,21 @@ def display_card(player):
         row3+=f'\n| {type} |'.strip()
         row4+=f'\n|__{size}|  '.strip()      
     print(row1+'\n'+row2+'\n'+row3+'\n'+row4)
-def generateCard():
+def render(player,dealer,open):
+    print('dealer: ', cardSum(dealer) if open==True else '???') #render cards and hands
+    display_card(dealer)
+    print("Player: ", cardSum(player))
+    display_card(player)
+def allocateScore():
+    print('tada')
+def generateCard(open=True):
     HEARTS   = chr(9829) # Character 9829 is '♥'.
     DIAMONDS = chr(9830) # Character 9830 is '♦'.
     SPADES   = chr(9824) # Character 9824 is '♠'.
     CLUBS    = chr(9827) # Character 9827 is '♣'.
     CARDS=['A',2,3,4,5,6,7,8,9,'J','Q','K']
     TYPE=[ HEARTS,DIAMONDS,SPADES,CLUBS,]
-    return [CARDS[ random.randint(0,11)],TYPE[random.randint(0,3)]]
+    return [CARDS[ random.randint(0,11)],TYPE[random.randint(0,3)],open]
 def cardSum(player):
     values=[]
     for i in player:
@@ -29,13 +36,17 @@ def cardSum(player):
         else: values.append(10)
 
     return sum(values)
-def check_game_status(player,name):
-    if cardSum(player)==21 : 
-        print(f"{name} won!")
+def check_game_status(player,dealer):
+    if cardSum(player)==21 or cardSum(dealer)==21 : 
         return 'gameover'
-    elif cardSum(player)>21:
-        print(f"{name} Lost")
+    elif cardSum(player)>21 or  cardSum(dealer)>21:  
+        return 'gameover'   
+    # elif cardSum(dealer)<17: #deal a card to the dealer
+    #     d=generateCard() 
+    #     dealer.append(d)
+    elif cardSum(dealer)>17 and cardSum(player)>cardSum(dealer):
         return 'gameover'
+       
     else: return 'gameon'
 
 
@@ -56,46 +67,32 @@ def blackJack():
     print("You have $5000")
     dealer=[]
     player=[]
-    d1=generateCard()
-    d1.append(False)
+    d1=generateCard(False)
     d2=generateCard()
-    d2.append(True)
     p1= generateCard()
-    p1.append(True)
     p2=generateCard()
-    p2.append(True)
     dealer.extend([d1,d2])
     player.extend([p1,p2])
     bet=int(input(f'How much would you like to bet? 1-{Money}: \n'))
-    # print('dealer',dealer)
-    print("Dealer: ???")
-    display_card(dealer)
-    print("Player: ", cardSum(player))
-    display_card(player)
+    Money-=bet
+    render(player,dealer,False)
     while True:
         move=input('(H)it, (S)tand, (D)ouble down\n').lower()
         if move=='h':
-            p=generateCard()
-            p.append(True)
+            p=generateCard() #deal card to player
             player.append(p)
-            dealer[0][2]=True
-            if cardSum(dealer)<17: 
-                d=generateCard()
-                d.append(True)
+            dealer[0][2]=True  #turn the dealer card faceup
+            if cardSum(dealer)<17: #deal a card to the dealer
+                d=generateCard() 
                 dealer.append(d)
-            else: 
-                if cardSum(player)>cardSum(dealer):
-                    bet+=bet
-                    print('You won this round!')
-                
-            print('dealer: ',cardSum(dealer))
-            display_card(dealer)
-            print("Player: ", cardSum(player))
-            display_card(player)
-            if check_game_status(dealer,'Dealer')=='gameover':
-                    # print('Dealer Lost!')
-                    break
-            if check_game_status(player,'You')=='gameover':
+            elif cardSum(player)>cardSum(dealer): #player wins the bet
+                Money+=bet
+                continuePlaying = input(f'You won ${bet}. You current account is: ${Money}\n Would you like to continue playing?(y/n)').lower()
+                bet+=bet 
+                if continuePlaying=='y': continue 
+                else: break  
+            render(player,dealer,True)
+            if check_game_status(player,dealer)=='gameover':
                 break
             else: continue
         elif move=='d':
