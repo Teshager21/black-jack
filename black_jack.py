@@ -77,6 +77,13 @@ def printGameRule():
         but must hit exactly one more time before standing.
         In case of a tie, the bet is returned to the player.
         The dealer stops hitting at 17.  ''')
+def init(dealer,player):
+    d1=generateCard(False) 
+    d2=generateCard()
+    p1= generateCard()
+    p2=generateCard()
+    dealer.extend([d1,d2]) #two cards dealt to dealer
+    player.extend([p1,p2]) #two cards dealt to player
 
 def blackJack():
     Money=5000
@@ -86,16 +93,15 @@ def blackJack():
             Money=5000
         dealer=[]
         player=[]
-        d1=generateCard(False) 
-        d2=generateCard()
-        p1= generateCard()
-        p2=generateCard()
-        dealer.extend([d1,d2]) #two cards dealt to dealer
-        player.extend([p1,p2]) #two cards dealt to player
-        
+        init(dealer,player)
         while True: 
             print(f"You have ${Money}")
-            bet=int(input(f'How much would you like to bet? 1-{Money}: \n'))
+            while True:
+                bet=input(f'How much would you like to bet? 1-{Money}: \n')
+                if bet.isnumeric():
+                    bet=int(bet)
+                    break
+                else: print("Please enter an integer value")
             if bet<=Money: 
                 Money-=bet
                 break
