@@ -82,7 +82,8 @@ def blackJack():
     Money=5000
     printGameRule()
     while True:
-        print(f"You have ${Money}")
+        if Money==0:
+            Money=5000
         dealer=[]
         player=[]
         d1=generateCard(False) 
@@ -93,6 +94,7 @@ def blackJack():
         player.extend([p1,p2]) #two cards dealt to player
         
         while True: 
+            print(f"You have ${Money}")
             bet=int(input(f'How much would you like to bet? 1-{Money}: \n'))
             if bet<=Money: 
                 Money-=bet
@@ -105,47 +107,6 @@ def blackJack():
             if move=='h':
                 p=generateCard() 
                 player.append(p)  #deal card to player
-                # if cardSum(player)==21:
-                #     Money= Money+2.5*bet
-                #     print(f'You won ${1.5*bet}. You current account is: ${Money}')
-                #     continuePlaying=''
-                #     while True:    #ask whether the user would like to  continue player
-                #         continuePlaying = input('Would you like to continue playing?(y/n)').lower()
-                #         if continuePlaying in ('n','y'): break
-                #         else: print("Choose either y or n")
-                #     if continuePlaying=='y': break 
-                #     elif continuePlaying=='n':return
-                   
-                # elif cardSum(player)>21:
-                #     print(f'You lost ${bet}. You current account is: ${Money}')
-                #     if Money==0:
-                #         print("Gameover, You no longer have money")
-                #         break
-                #     continuePlaying=''
-                #     while True:
-                #         continuePlaying = input('Would you like to continue playing?(y/n)').lower()
-                #         if continuePlaying in ('n','y'): break
-                #         else: print("Choose either y or n")
-                #     if continuePlaying=='y': break 
-                #     elif continuePlaying=='n':return
-                    
-                # dealer[0][2]=True  #turn the dealer card faceup
-                # if cardSum(dealer)<17: #deal a card to the dealer
-                #     d=generateCard() 
-                #     dealer.append(d)
-                # elif cardSum(player)>cardSum(dealer): #player wins the bet
-                #     Money+=2*bet
-                #     render(player,dealer,True)
-                #     print(f'You won ${bet}. You current account is: ${Money}')
-                #     continuePlaying=''
-                #     while True:
-                #         continuePlaying = input('Would you like to continue playing?(y/n)').lower()
-                #         if continuePlaying in ('n','y'): break
-                #         else: print("Choose either y or n")
-                #     if continuePlaying=='y': break 
-                #     elif continuePlaying=='n':return
-                
-                # render(player,dealer,True) 
                 dealer[0][2]=True  #turn the dealer card faceup
                 print(calculate_scores(player,dealer,Money,bet))
                 if calculate_scores(player,dealer,Money,bet)[0]==player:
@@ -158,11 +119,20 @@ def blackJack():
                     render(player,dealer,True) 
                     print(f'You lost ${bet}. You current account is: ${Money}')
                     break
-
                 render(player,dealer,True)  
             elif move=='d':
                 bet+=bet
                 print("your current bet is: ", bet)
             elif move=='s': continue
             else: print('Please choose the right letter!')
+        if(Money==0):
+            print("Gameover, You no longer have money")
+            while True:
+                continuePlaying = input('Would you like to continue playing?(y/n)').lower()
+                if continuePlaying in ('n','y'): break
+                else: print("Choose either y or n")
+            if continuePlaying=='y': continue
+            elif continuePlaying=='n':
+                print("Thank you for playing")
+                return
 blackJack()
