@@ -1,7 +1,6 @@
 import random
 def display_card(player):
     card=row1=row2=row3=row4=''
-    # print('here',player)
     for p in player:
         size,type,open=p
         if open==False:
@@ -16,8 +15,7 @@ def render(player,dealer,open):
     display_card(dealer)
     print("Player: ", cardSum(player))
     display_card(player)
-def allocateScore():
-    print('tada')
+
 def generateCard(open=True):
     HEARTS   = chr(9829) # Character 9829 is '♥'.
     DIAMONDS = chr(9830) # Character 9830 is '♦'.
@@ -36,23 +34,38 @@ def cardSum(player):
         else: values.append(10)
 
     return sum(values)
+def calculate_scores(player,dealer,Money,bet):
+    if cardSum(player)==21:
+        Money= Money+2.5*bet
+        return [player,Money] 
+    if cardSum(dealer)>21:
+        Money=Money+2*bet
+        return [player,Money]           
+    elif cardSum(player)>21:
+        dealer[0][2]=True  #turn the dealer card faceup
+        return [dealer,Money] 
+    elif cardSum(dealer)<17: #deal a card to the dealer
+        d=generateCard() 
+        dealer.append(d)
+        calculate_scores(player,dealer,Money,bet)
+    elif cardSum(dealer)>17:
+        if cardSum(player)>cardSum(dealer): #player wins the bet
+            Money+=2*bet
+            return [player,Money]
+        else:
+            return [dealer,Money] 
+       
+
 def check_game_status(player,dealer):
     if cardSum(player)==21 or cardSum(dealer)==21 : 
         return 'gameover'
     elif cardSum(player)>21 or  cardSum(dealer)>21:  
         return 'gameover'   
-    # elif cardSum(dealer)<17: #deal a card to the dealer
-    #     d=generateCard() 
-    #     dealer.append(d)
     elif cardSum(dealer)>17 and cardSum(player)>cardSum(dealer):
-        return 'gameover'
-       
+        return 'gameover'  
     else: return 'gameon'
-
-
-def blackJack():
-    Money=5000
-    print('''
+def printGameRule():
+      print('''
       Rules:
         Try to get as close to 21 without going over.
         Kings, Queens, and Jacks are worth 10 points.
@@ -64,40 +77,92 @@ def blackJack():
         but must hit exactly one more time before standing.
         In case of a tie, the bet is returned to the player.
         The dealer stops hitting at 17.  ''')
-    print("You have $5000")
-    dealer=[]
-    player=[]
-    d1=generateCard(False)
-    d2=generateCard()
-    p1= generateCard()
-    p2=generateCard()
-    dealer.extend([d1,d2])
-    player.extend([p1,p2])
-    bet=int(input(f'How much would you like to bet? 1-{Money}: \n'))
-    Money-=bet
-    render(player,dealer,False)
+
+def blackJack():
+    Money=5000
+    printGameRule()
     while True:
-        move=input('(H)it, (S)tand, (D)ouble down\n').lower()
-        if move=='h':
-            p=generateCard() #deal card to player
-            player.append(p)
-            dealer[0][2]=True  #turn the dealer card faceup
-            if cardSum(dealer)<17: #deal a card to the dealer
-                d=generateCard() 
-                dealer.append(d)
-            elif cardSum(player)>cardSum(dealer): #player wins the bet
-                Money+=bet
-                continuePlaying = input(f'You won ${bet}. You current account is: ${Money}\n Would you like to continue playing?(y/n)').lower()
-                bet+=bet 
-                if continuePlaying=='y': continue 
-                else: break  
-            render(player,dealer,True)
-            if check_game_status(player,dealer)=='gameover':
+        print(f"You have ${Money}")
+        dealer=[]
+        player=[]
+        d1=generateCard(False) 
+        d2=generateCard()
+        p1= generateCard()
+        p2=generateCard()
+        dealer.extend([d1,d2]) #two cards dealt to dealer
+        player.extend([p1,p2]) #two cards dealt to player
+        
+        while True: 
+            bet=int(input(f'How much would you like to bet? 1-{Money}: \n'))
+            if bet<=Money: 
+                Money-=bet
                 break
-            else: continue
-        elif move=='d':
-            bet+=bet
-            print("your current bet is: ", bet)
-        elif move=='s': continue
-        else: print('Please choose the right letter!')
+            else: print(f'You remaining amount is only {Money}. Please lower your bet!')
+        render(player,dealer,False)
+        while True:
+            move=input('(H)it, (S)tand, (D)ouble down\n').lower()
+
+            if move=='h':
+                p=generateCard() 
+                player.append(p)  #deal card to player
+                # if cardSum(player)==21:
+                #     Money= Money+2.5*bet
+                #     print(f'You won ${1.5*bet}. You current account is: ${Money}')
+                #     continuePlaying=''
+                #     while True:    #ask whether the user would like to  continue player
+                #         continuePlaying = input('Would you like to continue playing?(y/n)').lower()
+                #         if continuePlaying in ('n','y'): break
+                #         else: print("Choose either y or n")
+                #     if continuePlaying=='y': break 
+                #     elif continuePlaying=='n':return
+                   
+                # elif cardSum(player)>21:
+                #     print(f'You lost ${bet}. You current account is: ${Money}')
+                #     if Money==0:
+                #         print("Gameover, You no longer have money")
+                #         break
+                #     continuePlaying=''
+                #     while True:
+                #         continuePlaying = input('Would you like to continue playing?(y/n)').lower()
+                #         if continuePlaying in ('n','y'): break
+                #         else: print("Choose either y or n")
+                #     if continuePlaying=='y': break 
+                #     elif continuePlaying=='n':return
+                    
+                # dealer[0][2]=True  #turn the dealer card faceup
+                # if cardSum(dealer)<17: #deal a card to the dealer
+                #     d=generateCard() 
+                #     dealer.append(d)
+                # elif cardSum(player)>cardSum(dealer): #player wins the bet
+                #     Money+=2*bet
+                #     render(player,dealer,True)
+                #     print(f'You won ${bet}. You current account is: ${Money}')
+                #     continuePlaying=''
+                #     while True:
+                #         continuePlaying = input('Would you like to continue playing?(y/n)').lower()
+                #         if continuePlaying in ('n','y'): break
+                #         else: print("Choose either y or n")
+                #     if continuePlaying=='y': break 
+                #     elif continuePlaying=='n':return
+                
+                # render(player,dealer,True) 
+                dealer[0][2]=True  #turn the dealer card faceup
+                print(calculate_scores(player,dealer,Money,bet))
+                if calculate_scores(player,dealer,Money,bet)[0]==player:
+                    Money=calculate_scores(player,dealer,Money,bet)[1]
+                    render(player,dealer,True) 
+                    print(f'You won ${1.5*bet}. You current account is: ${Money}')
+                    break
+                elif calculate_scores(player,dealer,Money,bet)[0]==dealer:
+                    Money=calculate_scores(player,dealer,Money,bet)[1]
+                    render(player,dealer,True) 
+                    print(f'You lost ${bet}. You current account is: ${Money}')
+                    break
+
+                render(player,dealer,True)  
+            elif move=='d':
+                bet+=bet
+                print("your current bet is: ", bet)
+            elif move=='s': continue
+            else: print('Please choose the right letter!')
 blackJack()
